@@ -13,7 +13,7 @@ export function naiveTopDownDepthFirstSearchParse<
   T extends string
 >(grammar: Grammar<NT, T>, input: string, debug: boolean = false) {
   if (debug) {
-    console.log(`========== BEGIN PARSE OF INPUT: ${input} ==========`);
+    console.log(`========== BEGIN PARSE OF INPUT: "${input}" ==========`);
   }
 
   // Each stack item represents the head of the current possible parsing branch.
@@ -61,12 +61,8 @@ export function naiveTopDownDepthFirstSearchParse<
 
     if (debug) {
       console.log("parse iteration ------------");
-      console.log(`currentInputCharacter: ${currentInputCharacter}`);
-      console.log(
-        `sententialForm: ${
-          sententialForm.length ? sententialForm.join(" ") : "empty"
-        }`
-      );
+      console.log(`currentInputCharacter: "${currentInputCharacter || "EOF"}"`);
+      console.log(`sententialForm: "${sententialForm.join(" ")}"`);
     }
 
     /**

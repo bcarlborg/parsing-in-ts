@@ -10,7 +10,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.naiveTopDownDepthFirstSearchParse = naiveTopDownDepthFirstSearchParse;
 function naiveTopDownDepthFirstSearchParse(grammar, input, debug = false) {
     if (debug) {
-        console.log(`========== BEGIN PARSE OF INPUT: ${input} ==========`);
+        console.log(`========== BEGIN PARSE OF INPUT: "${input}" ==========`);
     }
     // The stack is used to store the current possible parsing branches.
     const stack = [];
@@ -47,8 +47,8 @@ function naiveTopDownDepthFirstSearchParse(grammar, input, debug = false) {
         const firstSymbolInSententialForm = sententialForm[0];
         if (debug) {
             console.log("parse iteration ------------");
-            console.log(`currentInputCharacter: ${currentInputCharacter}`);
-            console.log(`sententialForm: ${sententialForm.length ? sententialForm.join(" ") : "empty"}`);
+            console.log(`currentInputCharacter: "${currentInputCharacter || "EOF"}"`);
+            console.log(`sententialForm: "${sententialForm.join(" ")}"`);
         }
         /**
          * If we find a stack item for which there are no more input characters to match
