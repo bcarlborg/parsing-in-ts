@@ -6,6 +6,8 @@
  * ========================================================================================
  */
 
+import { printParseTree } from "../helpers/print-parse-tree";
+import { constructParseTreeFromLeftMostProductionSequence } from "../helpers/production-sequence-to-parse-tree";
 import type { Grammar } from "../types";
 
 export function naiveTopDownDepthFirstSearchParse<
@@ -200,46 +202,12 @@ export function naiveTopDownDepthFirstSearchParse<
     console.log(acceptingProductionSequence);
   }
 
-  type ParseNode = {
-    symbol: NT | T;
-    children: ParseNode[];
-  };
+  const parseTree = constructParseTreeFromLeftMostProductionSequence(
+    grammar,
+    acceptingProductionSequence
+  );
 
-  const parseTree: ParseNode = {
-    symbol: grammar.startSymbol,
-    children: [],
-  };
-
-  const nodeStack: ParseNode[] = [parseTree];
-
-  for (const { key, production } of acceptingProductionSequence) {
-    console.log(`nodeStack: ${nodeStack.map((node) => node.symbol).join(" ")}`);
-    console.log(`processing production: ${key} -> ${production.join(" ")}`);
-
-    const currentNode = nodeStack.pop();
-    if (!currentNode) {
-      throw new Error("Attempted to pop an empty stack");
-    }
-
-    console.log(
-      `production key: ${key} currentNode symbol: ${currentNode.symbol}`
-    );
-
-    if (key === currentNode.symbol) {
-      const childNodes = production.map((symbol) => {
-        return {
-          symbol,
-          children: [],
-        };
-      });
-
-      currentNode.children.push(...childNodes);
-
-      if (grammar.nonTerminals.has(key as NT)) {
-        nodeStack.push(...childNodes.reverse());
-      }
-    }
-  }
+  printParseTree(parseTree);
 
   return true;
 }

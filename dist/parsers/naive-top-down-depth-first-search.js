@@ -8,6 +8,8 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.naiveTopDownDepthFirstSearchParse = naiveTopDownDepthFirstSearchParse;
+const print_parse_tree_1 = require("../helpers/print-parse-tree");
+const production_sequence_to_parse_tree_1 = require("../helpers/production-sequence-to-parse-tree");
 function naiveTopDownDepthFirstSearchParse(grammar, input, debug = false) {
     if (debug) {
         console.log(`========== BEGIN PARSE OF INPUT: "${input}" ==========`);
@@ -157,31 +159,7 @@ function naiveTopDownDepthFirstSearchParse(grammar, input, debug = false) {
         console.log("========== ACCEPTING PARSE FOUND ==========");
         console.log(acceptingProductionSequence);
     }
-    const parseTree = {
-        symbol: grammar.startSymbol,
-        children: [],
-    };
-    const nodeStack = [parseTree];
-    for (const { key, production } of acceptingProductionSequence) {
-        console.log(`nodeStack: ${nodeStack.map((node) => node.symbol).join(" ")}`);
-        console.log(`processing production: ${key} -> ${production.join(" ")}`);
-        const currentNode = nodeStack.pop();
-        if (!currentNode) {
-            throw new Error("Attempted to pop an empty stack");
-        }
-        console.log(`production key: ${key} currentNode symbol: ${currentNode.symbol}`);
-        if (key === currentNode.symbol) {
-            const childNodes = production.map((symbol) => {
-                return {
-                    symbol,
-                    children: [],
-                };
-            });
-            currentNode.children.push(...childNodes);
-            if (grammar.nonTerminals.has(key)) {
-                nodeStack.push(...childNodes.reverse());
-            }
-        }
-    }
+    const parseTree = (0, production_sequence_to_parse_tree_1.constructParseTreeFromLeftMostProductionSequence)(grammar, acceptingProductionSequence);
+    (0, print_parse_tree_1.printParseTree)(parseTree);
     return true;
 }
