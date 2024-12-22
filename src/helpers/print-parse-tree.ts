@@ -1,5 +1,29 @@
 import { ParseNode } from "../types";
 
+/**
+ * Accepts a parse tree and prints it in a human-readable format.
+ * For example, the following parse tree:
+ *      S
+ *    / | \
+ *   T  +  S
+ *   |     |
+ *   1     T
+ *         |
+ *         1
+ *
+ * Would be printed as:
+ *
+ * <symbol: S>
+ *   <symbol: T>
+ *     <symbol: 1>
+ *       <terminal: 1>
+ *   <symbol: +>
+ *     <terminal: +>
+ *   <symbol: S>
+ *     <symbol: T>
+ *       <symbol: 1>
+ *         <terminal: 1>
+ */
 export function printParseTree<NT extends string, T extends string>(
   parseTree: ParseNode<NT, T>
 ) {

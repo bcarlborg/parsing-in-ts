@@ -8,7 +8,6 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.naiveTopDownDepthFirstSearchParse = naiveTopDownDepthFirstSearchParse;
-const print_parse_tree_1 = require("../helpers/print-parse-tree");
 const production_sequence_to_parse_tree_1 = require("../helpers/production-sequence-to-parse-tree");
 function naiveTopDownDepthFirstSearchParse(grammar, input, debug = false) {
     if (debug) {
@@ -153,13 +152,12 @@ function naiveTopDownDepthFirstSearchParse(grammar, input, debug = false) {
      * generate the input -- so we return false.
      */
     if (!acceptingProductionSequence) {
-        return false;
+        return null;
     }
     if (debug) {
         console.log("========== ACCEPTING PARSE FOUND ==========");
         console.log(acceptingProductionSequence);
     }
     const parseTree = (0, production_sequence_to_parse_tree_1.constructParseTreeFromLeftMostProductionSequence)(grammar, acceptingProductionSequence);
-    (0, print_parse_tree_1.printParseTree)(parseTree);
-    return true;
+    return parseTree;
 }

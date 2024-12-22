@@ -194,7 +194,7 @@ export function naiveTopDownDepthFirstSearchParse<
    * generate the input -- so we return false.
    */
   if (!acceptingProductionSequence) {
-    return false;
+    return null;
   }
 
   if (debug) {
@@ -207,7 +207,5 @@ export function naiveTopDownDepthFirstSearchParse<
     acceptingProductionSequence
   );
 
-  printParseTree(parseTree);
-
-  return true;
+  return parseTree;
 }
