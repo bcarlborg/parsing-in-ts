@@ -16,10 +16,16 @@ export function naiveTopDownDepthFirstSearchParse<
     console.log(`========== BEGIN PARSE OF INPUT: "${input}" ==========`);
   }
 
+  type ProductionSequence = {
+    key: NT | T;
+    production: (NT | T)[];
+  }[];
+
   // Each stack item represents the head of the current possible parsing branch.
   type StackItem = {
     currentInputIndex: number;
     sententialForm: (NT | T)[];
+    productions: ProductionSequence;
   };
 
   // The stack is used to store the current possible parsing branches.
@@ -29,7 +35,10 @@ export function naiveTopDownDepthFirstSearchParse<
   stack.push({
     currentInputIndex: 0,
     sententialForm: [grammar.startSymbol],
+    productions: [],
   });
+
+  let acceptingProductionSequence: ProductionSequence | undefined = undefined;
 
   /**
    * The parsing loop.
@@ -73,7 +82,8 @@ export function naiveTopDownDepthFirstSearchParse<
       currentInputCharacter === undefined &&
       firstSymbolInSententialForm === undefined
     ) {
-      return true;
+      acceptingProductionSequence = stackItem.productions;
+      break;
     }
 
     /**
@@ -111,6 +121,13 @@ export function naiveTopDownDepthFirstSearchParse<
         stack.push({
           currentInputIndex: currentInputIndex + 1,
           sententialForm: sententialForm.slice(1),
+          productions: [
+            ...stackItem.productions,
+            {
+              key: firstSymbolInSententialForm,
+              production: [firstSymbolInSententialForm],
+            },
+          ],
         });
         continue;
       }
@@ -146,6 +163,13 @@ export function naiveTopDownDepthFirstSearchParse<
             ...productionForNonTerminal,
             ...sententialForm.slice(1),
           ],
+          productions: [
+            ...stackItem.productions,
+            {
+              key: firstSymbolInSententialForm,
+              production: [...productionForNonTerminal],
+            },
+          ],
         });
       }
       continue;
@@ -163,8 +187,20 @@ export function naiveTopDownDepthFirstSearchParse<
   }
 
   /**
-   * If we have exhausted all possible parse branches and found no valid parse,
-   * then we return false.
+   * The only way we can exit the parsing loop is if we have found an accepting parse.
+   * If we exit the loop without finding an accepting parse, then this grammar cannot
+   * generate the input -- so we return false.
    */
-  return false;
+  if (!acceptingProductionSequence) {
+    return false;
+  }
+
+  if (debug) {
+    console.log("========== ACCEPTING PARSE FOUND ==========");
+    console.log(acceptingProductionSequence);
+  }
+
+  // todo, construct parse tree of objects
+
+  return true;
 }

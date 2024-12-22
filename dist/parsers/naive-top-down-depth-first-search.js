@@ -18,7 +18,9 @@ function naiveTopDownDepthFirstSearchParse(grammar, input, debug = false) {
     stack.push({
         currentInputIndex: 0,
         sententialForm: [grammar.startSymbol],
+        productions: [],
     });
+    let acceptingProductionSequence = undefined;
     /**
      * The parsing loop.
      *
@@ -56,7 +58,8 @@ function naiveTopDownDepthFirstSearchParse(grammar, input, debug = false) {
          */
         if (currentInputCharacter === undefined &&
             firstSymbolInSententialForm === undefined) {
-            return true;
+            acceptingProductionSequence = stackItem.productions;
+            break;
         }
         /**
          * If there are more input characters to match, but the sentential form is empty,
@@ -87,6 +90,13 @@ function naiveTopDownDepthFirstSearchParse(grammar, input, debug = false) {
                 stack.push({
                     currentInputIndex: currentInputIndex + 1,
                     sententialForm: sententialForm.slice(1),
+                    productions: [
+                        ...stackItem.productions,
+                        {
+                            key: firstSymbolInSententialForm,
+                            production: [firstSymbolInSententialForm],
+                        },
+                    ],
                 });
                 continue;
             }
@@ -118,6 +128,13 @@ function naiveTopDownDepthFirstSearchParse(grammar, input, debug = false) {
                         ...productionForNonTerminal,
                         ...sententialForm.slice(1),
                     ],
+                    productions: [
+                        ...stackItem.productions,
+                        {
+                            key: firstSymbolInSententialForm,
+                            production: [...productionForNonTerminal],
+                        },
+                    ],
                 });
             }
             continue;
@@ -129,8 +146,17 @@ function naiveTopDownDepthFirstSearchParse(grammar, input, debug = false) {
         throw new Error(`Unexpected symbol ${firstSymbolInSententialForm} in sentential form: ${sententialForm.join(" ")}`);
     }
     /**
-     * If we have exhausted all possible parse branches and found no valid parse,
-     * then we return false.
+     * The only way we can exit the parsing loop is if we have found an accepting parse.
+     * If we exit the loop without finding an accepting parse, then this grammar cannot
+     * generate the input -- so we return false.
      */
-    return false;
+    if (!acceptingProductionSequence) {
+        return false;
+    }
+    if (debug) {
+        console.log("========== ACCEPTING PARSE FOUND ==========");
+        console.log(acceptingProductionSequence);
+    }
+    // todo, construct parse tree of objects
+    return true;
 }

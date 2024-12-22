@@ -5,7 +5,8 @@ const inputExpressions = ["", "0", "1", "0+0", "1+1", "1+1+1+1", "+"];
 for (const inputExpression of inputExpressions) {
   const result = naiveTopDownDepthFirstSearchParse(
     rightRecursiveBinaryAdditionExpressionsGrammar,
-    inputExpression
+    inputExpression,
+    true
   );
   console.log(`parsing: "${inputExpression}", result ${result}`);
 }
