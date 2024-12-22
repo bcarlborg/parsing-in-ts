@@ -11,10 +11,10 @@ _A simple list of todos that I use to remember where I left off. Buyer be warned
 
 **Code Structure**
 
-- [ ] make args objects
-- [ ] add better interface for debug logging
+- [ ] make args objects for functions
+- [ ] add better interface for debug logging (multiple levels of debugging maybe? a helper that outputs the filename too?)
 - [ ] add tests to validate behavior of that parser
-- [ ] make script accept input args to run particular parsers
+- [ ] make script accept input args to run particular parsers and choose different output conditions
 - [ ] make dist/ git ignored
 
 **Observabillity**
