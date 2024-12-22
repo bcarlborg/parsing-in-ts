@@ -6,13 +6,16 @@ _A simple list of todos that I use to remember where I left off. Buyer be warned
 
 **functionality**
 
-- [x] update top down parser to keep track of production sequence
-- [ ] update parser top down depth first search parser to return parse tree
+- [ ] bottom up breadth first search
+- [ ] bottom up depth first seach
 
 **Code Structure**
 
+- [ ] make args objects
+- [ ] add better interface for debug logging
 - [ ] add tests to validate behavior of that parser
 - [ ] make script accept input args to run particular parsers
+- [ ] make dist/ git ignored
 
 **Observabillity**
 

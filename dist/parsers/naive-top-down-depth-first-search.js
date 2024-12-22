@@ -75,8 +75,8 @@ function naiveTopDownDepthFirstSearchParse(grammar, input, debug = false) {
          * How we continue exploring this parse branch depends on wether the first
          * symbol in the sentential form is a terminal or a non-terminal.
          */
-        const isTerminal = grammar.terminals.has(firstSymbolInSententialForm);
-        const isNonTerminal = grammar.nonTerminals.has(firstSymbolInSententialForm);
+        const isTerminal = grammar.isTerminalSymbol(firstSymbolInSententialForm);
+        const isNonTerminal = grammar.isNonTerminalSymbol(firstSymbolInSententialForm);
         /**
          * If the first symbol in the sentential form is a terminal, then this branch
          * can only be valid if the terminal matches the current input character.
@@ -93,10 +93,10 @@ function naiveTopDownDepthFirstSearchParse(grammar, input, debug = false) {
                     sententialForm: sententialForm.slice(1),
                     productions: [
                         ...stackItem.productions,
-                        {
-                            key: firstSymbolInSententialForm,
-                            production: [firstSymbolInSententialForm],
-                        },
+                        // {
+                        //   key: firstSymbolInSententialForm,
+                        //   production: [firstSymbolInSententialForm],
+                        // },
                     ],
                 });
                 continue;
@@ -132,7 +132,7 @@ function naiveTopDownDepthFirstSearchParse(grammar, input, debug = false) {
                     productions: [
                         ...stackItem.productions,
                         {
-                            key: firstSymbolInSententialForm,
+                            symbol: firstSymbolInSententialForm,
                             production: [...productionForNonTerminal],
                         },
                     ],

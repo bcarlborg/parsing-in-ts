@@ -1,4 +1,4 @@
-export type Grammar<NT extends string, T extends string> = Readonly<{
+export type GrammarData<NT extends string, T extends string> = Readonly<{
   startSymbol: NT;
   nonTerminals: Set<NT>;
   terminals: Set<T>;
@@ -8,7 +8,7 @@ export type Grammar<NT extends string, T extends string> = Readonly<{
 }>;
 
 export type Production<NT extends string, T extends string> = {
-  key: NT | T;
+  symbol: NT;
   production: (NT | T)[];
 };
 

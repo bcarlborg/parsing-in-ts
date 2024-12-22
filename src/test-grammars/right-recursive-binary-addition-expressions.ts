@@ -1,4 +1,4 @@
-import type { Grammar } from "../types";
+import type { GrammarData } from "../types";
 
 /** =======================================================================================
  * Right Recursive Binary Addition Expressions Grammar
@@ -26,7 +26,7 @@ const expressionProductions = {
   T: [["0"] as const, ["1"] as const] as const,
 } as const;
 
-export const rightRecursiveBinaryAdditionExpressionsGrammar: Grammar<
+export const rightRecursiveBinaryAdditionExpressionsGrammar: GrammarData<
   ExpressionNonTerminal,
   ExpressionTerminal
 > = {

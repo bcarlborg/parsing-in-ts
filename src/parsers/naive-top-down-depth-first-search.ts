@@ -8,8 +8,8 @@
 
 import { printParseTree } from "../helpers/print-parse-tree";
 import { constructParseTreeFromLeftMostProductionSequence } from "../helpers/production-sequence-to-parse-tree";
-import type { Grammar } from "../types";
-
+import type { ProductionSequence } from "../types";
+import { Grammar } from "../grammar/grammar";
 export function naiveTopDownDepthFirstSearchParse<
   NT extends string,
   T extends string
@@ -18,16 +18,11 @@ export function naiveTopDownDepthFirstSearchParse<
     console.log(`========== BEGIN PARSE OF INPUT: "${input}" ==========`);
   }
 
-  type ProductionSequence = {
-    key: NT | T;
-    production: (NT | T)[];
-  }[];
-
   // Each stack item represents the head of the current possible parsing branch.
   type StackItem = {
     currentInputIndex: number;
     sententialForm: (NT | T)[];
-    productions: ProductionSequence;
+    productions: ProductionSequence<NT, T>;
   };
 
   // The stack is used to store the current possible parsing branches.
@@ -40,7 +35,8 @@ export function naiveTopDownDepthFirstSearchParse<
     productions: [],
   });
 
-  let acceptingProductionSequence: ProductionSequence | undefined = undefined;
+  let acceptingProductionSequence: ProductionSequence<NT, T> | undefined =
+    undefined;
 
   /**
    * The parsing loop.
@@ -104,9 +100,9 @@ export function naiveTopDownDepthFirstSearchParse<
      * How we continue exploring this parse branch depends on wether the first
      * symbol in the sentential form is a terminal or a non-terminal.
      */
-    const isTerminal = grammar.terminals.has(firstSymbolInSententialForm as T);
-    const isNonTerminal = grammar.nonTerminals.has(
-      firstSymbolInSententialForm as NT
+    const isTerminal = grammar.isTerminalSymbol(firstSymbolInSententialForm);
+    const isNonTerminal = grammar.isNonTerminalSymbol(
+      firstSymbolInSententialForm
     );
 
     /**
@@ -125,10 +121,10 @@ export function naiveTopDownDepthFirstSearchParse<
           sententialForm: sententialForm.slice(1),
           productions: [
             ...stackItem.productions,
-            {
-              key: firstSymbolInSententialForm,
-              production: [firstSymbolInSententialForm],
-            },
+            // {
+            //   key: firstSymbolInSententialForm,
+            //   production: [firstSymbolInSententialForm],
+            // },
           ],
         });
         continue;
@@ -151,7 +147,7 @@ export function naiveTopDownDepthFirstSearchParse<
        * First, we get all productions for the non-terminal.
        */
       const productionsForNonTerminal =
-        grammar.productions[firstSymbolInSententialForm as NT];
+        grammar.productions[firstSymbolInSententialForm];
 
       /**
        * Then we explore every parse tree possibility for this non-terminal
@@ -168,7 +164,7 @@ export function naiveTopDownDepthFirstSearchParse<
           productions: [
             ...stackItem.productions,
             {
-              key: firstSymbolInSententialForm,
+              symbol: firstSymbolInSententialForm,
               production: [...productionForNonTerminal],
             },
           ],
