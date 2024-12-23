@@ -4,7 +4,7 @@
   "description": "A collection of parsing algorithms in TypeScript",
   "main": "index.js",
   "scripts": {
-    "test": "No tests yet :^)",
+    "test": "npx jest",
     "build": "tsc",
     "clean": "rm -rf dist",
     "start": "npm run build && node dist/index.js"
@@ -14,7 +14,9 @@
   "license": "ISC",
   "devDependencies": {
     "@tsconfig/node18": "^18.2.4",
+    "@types/jest": "^29.5.14",
     "@types/node": "^22.10.2",
+    "ts-jest": "^29.2.5",
     "typescript": "^5.7.2"
   }
 }
