@@ -14,4 +14,34 @@ describe("naiveTopDownDepthFirstSearch", () => {
     const parseTree = naiveTopDownDepthFirstSearchParse(grammar, input);
     expect(parseTree).toEqual(expected);
   });
+
+  it.each([
+    {
+      input: "1",
+      expected: {
+        symbol: "S",
+        children: [{ symbol: "T", children: [{ symbol: "1", children: [] }] }],
+      },
+    },
+    {
+      input: "1+0",
+      expected: {
+        symbol: "S",
+        children: [
+          { symbol: "T", children: [{ symbol: "1", children: [] }] },
+          { symbol: "+", children: [] },
+          {
+            symbol: "S",
+            children: [
+              { symbol: "T", children: [{ symbol: "0", children: [] }] },
+            ],
+          },
+        ],
+      },
+    },
+  ])("parse validinput: $input", ({ input, expected }) => {
+    const grammar = new Grammar(rightRecursiveBinaryAdditionExpressionsGrammar);
+    const parseTree = naiveTopDownDepthFirstSearchParse(grammar, input);
+    expect(parseTree).toEqual(expected);
+  });
 });
