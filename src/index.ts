@@ -1,7 +1,6 @@
 import { Grammar } from "./grammar/grammar";
 import { printParseTree } from "./helpers/print-parse-tree";
 import { naiveTopDownDepthFirstSearchParse } from "./parsers/naive-top-down-depth-first-search";
-import { WIP_naiveTopDownDepthFirstSearchParse } from "./parsers/WIP-naive-top-down-depth-first";
 import { rightRecursiveBinaryAdditionExpressionsGrammar } from "./test-grammars/right-recursive-binary-addition-expressions";
 
 const inputExpressions = [
@@ -21,10 +20,7 @@ for (const inputExpression of inputExpressions) {
 
   console.log(`========== PARSING: "${inputExpression}" ==========`);
 
-  const result = WIP_naiveTopDownDepthFirstSearchParse(
-    grammar,
-    inputExpression
-  );
+  const result = naiveTopDownDepthFirstSearchParse(grammar, inputExpression);
 
   if (result) {
     printParseTree(result);
