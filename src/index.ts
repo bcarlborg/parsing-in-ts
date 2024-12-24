@@ -1,7 +1,7 @@
 import { Grammar } from "./grammar/grammar";
 import { printParseTree } from "./helpers/print-parse-tree";
 import { naiveTopDownDepthFirstSearchParse } from "./parsers/naive-top-down-depth-first-search";
-import { rightRecursiveBinaryAdditionExpressionsGrammar } from "./test-grammars/right-recursive-binary-addition-expressions";
+import { rightRecursiveBinaryAdditionExpressionsGrammarData } from "./test-grammars/right-recursive-binary-addition-expressions";
 
 const inputExpressions = [
   "",
@@ -16,7 +16,9 @@ const inputExpressions = [
   "0+1+1+1",
 ];
 for (const inputExpression of inputExpressions) {
-  const grammar = new Grammar(rightRecursiveBinaryAdditionExpressionsGrammar);
+  const grammar = new Grammar(
+    rightRecursiveBinaryAdditionExpressionsGrammarData
+  );
 
   console.log(`========== PARSING: "${inputExpression}" ==========`);
 

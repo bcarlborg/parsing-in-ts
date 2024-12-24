@@ -26,7 +26,7 @@ const expressionProductions = {
   T: [["0"] as const, ["1"] as const] as const,
 } as const;
 
-export const leftRecursiveBinaryAdditionExpressionsGrammar: GrammarData<
+export const leftRecursiveBinaryAdditionExpressionsGrammarData: GrammarData<
   ExpressionNonTerminal,
   ExpressionTerminal
 > = {

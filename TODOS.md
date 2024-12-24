@@ -4,6 +4,12 @@ _A simple list of todos that I use to remember where I left off. Buyer be warned
 
 ## Current TODOS
 
+**refactors**
+
+- [ ] In general, I am starting to like the approach for the DFS more and more, it feels a bit
+      more clear, but I think it still is more complicated than it needs to be. I feel like
+      there are interfaces that I can simplify.
+
 **functionality**
 
 - [ ] bottom up breadth first search
@@ -11,12 +17,9 @@ _A simple list of todos that I use to remember where I left off. Buyer be warned
 
 **Code Structure**
 
-- [ ] make args objects for functions
 - [ ] add better interface for debug logging (multiple levels of debugging maybe? a helper that outputs the filename too?)
-- [ ] add tests to validate behavior of that parser
 - [ ] make script accept input args to run particular parsers and choose different output conditions
 - [ ] make unused imports a lint error
-- [ ] rename grammar exports as grammar data
 
 **Observabillity**
 

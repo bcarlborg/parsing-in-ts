@@ -1,5 +1,5 @@
 import { Grammar } from "../grammar/grammar";
-import { rightRecursiveBinaryAdditionExpressionsGrammar } from "../test-grammars/right-recursive-binary-addition-expressions";
+import { rightRecursiveBinaryAdditionExpressionsGrammarData } from "../test-grammars/right-recursive-binary-addition-expressions";
 import { naiveTopDownDepthFirstSearchParse } from "./naive-top-down-depth-first-search";
 
 describe("naiveTopDownDepthFirstSearch", () => {
@@ -10,7 +10,9 @@ describe("naiveTopDownDepthFirstSearch", () => {
     { input: "10", expected: null },
     { input: "1+", expected: null },
   ])("parse invalid input: $input", ({ input, expected }) => {
-    const grammar = new Grammar(rightRecursiveBinaryAdditionExpressionsGrammar);
+    const grammar = new Grammar(
+      rightRecursiveBinaryAdditionExpressionsGrammarData
+    );
     const parseTree = naiveTopDownDepthFirstSearchParse({ grammar, input });
     expect(parseTree).toEqual(expected);
   });
@@ -40,7 +42,9 @@ describe("naiveTopDownDepthFirstSearch", () => {
       },
     },
   ])("parse validinput: $input", ({ input, expected }) => {
-    const grammar = new Grammar(rightRecursiveBinaryAdditionExpressionsGrammar);
+    const grammar = new Grammar(
+      rightRecursiveBinaryAdditionExpressionsGrammarData
+    );
     const parseTree = naiveTopDownDepthFirstSearchParse({ grammar, input });
     expect(parseTree).toEqual(expected);
   });
