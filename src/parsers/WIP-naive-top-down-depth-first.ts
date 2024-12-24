@@ -32,15 +32,9 @@ export function WIP_naiveTopDownDepthFirstSearchParse<
 >(grammar: Grammar<NT, T>, input: string) {
   const productionSequence = dfsFindDerivationSequenceForInput(grammar, input);
 
-  console.log("productionSequence");
-
   if (!productionSequence) {
-    console.log("NULL");
     return null;
   }
-  productionSequence.forEach((production) => {
-    console.log(`${production.symbol} -> ${production.production.join(" ")}`);
-  });
 
   return constructParseTreeFromLeftMostProductionSequence(
     grammar,
@@ -93,35 +87,21 @@ function dfsFindDerivationSequenceForInput<NT extends string, T extends string>(
      * Match leading terminal symbols with our input.
      */
 
-    // TODO:
-    // This while loop and the check below could be a function. The function could
-    // return the next index and the next sentential form or throw?
+    const matchResult = matchStartingTerminalsToInput({
+      grammar,
+      input,
+      sententialForm,
+      currentInputIndex,
+    });
 
-    // TODO: this is causing an infinite loop! If we always check the first item,
-    // then it will always be a terminal symbol.
-
-    while (grammar.isTerminalSymbol(sententialForm[0])) {
-      // if we are out of input symbols, then this is not a valid path
-      if (currentInputIndex >= input.length) {
-        console.log("OUT OF INPUT SYMBOLS");
-        return null;
-      }
-
-      // if the current input symbol matches the current sentential form symbol,
-      // then then advance the current input index and unshift from the sentential form.
-      // if they do not match, then this is not a valid path.
-      if (sententialForm[0] === input[currentInputIndex]) {
-        sententialForm.shift();
-        currentInputIndex++;
-        continue;
-      }
-    }
-
-    // if there are still terminal symbols at the start of the sentential form,
-    // then we couldn't match them with the input and this is not a valid path.
-    if (grammar.isTerminalSymbol(sententialForm[0])) {
+    // null indicates that the sentential form does not match the input.
+    // so we continue to end this exploration branch.
+    if (matchResult === null) {
       continue;
     }
+
+    sententialForm = matchResult.nextSententialForm;
+    currentInputIndex = matchResult.nextInputIndex;
 
     /**
      * Step 2:
@@ -130,7 +110,7 @@ function dfsFindDerivationSequenceForInput<NT extends string, T extends string>(
 
     // After matching leading terminal symbols, if the sentential form is empty
     // and we have reached the end of the input, then we have found a valid path.
-    if (sententialForm.length === 0 && currentInputIndex === input.length) {
+    if (sententialForm.length === 0 && currentInputIndex > input.length - 1) {
       return getProductionSequenceFromStackItem(stackItem, parents);
     }
 
@@ -174,6 +154,65 @@ function dfsFindDerivationSequenceForInput<NT extends string, T extends string>(
   }
 
   return null;
+}
+
+function matchStartingTerminalsToInput<
+  NT extends string,
+  T extends string
+>(args: {
+  grammar: Grammar<NT, T>;
+  input: string;
+  sententialForm: (NT | T)[];
+  currentInputIndex: number;
+}): {
+  nextSententialForm: (NT | T)[];
+  nextInputIndex: number;
+} | null {
+  const { grammar, input, sententialForm, currentInputIndex } = args;
+
+  let nextSententialForm: (NT | T)[] = sententialForm;
+  let nextInputIndex = currentInputIndex;
+
+  while (true) {
+    const isAtEndOfInput = nextInputIndex > input.length - 1;
+    const currentSententialFormSymbol = nextSententialForm[0];
+    const currentInputSymbol = input[nextInputIndex];
+
+    if (nextSententialForm.length === 0 && isAtEndOfInput) {
+      return {
+        nextSententialForm: [],
+        nextInputIndex: currentInputIndex + 1,
+      };
+    }
+    // if there are more symbols in the input and no more symbols in the
+    // sentential form, then this is not a valid parse.
+    if (currentSententialFormSymbol === undefined && currentInputSymbol) {
+      return null;
+    }
+
+    // if there are more symbols in the sentential form and no more symbols
+    // in the input, then this is not a valid parse.
+    if (currentSententialFormSymbol && currentInputSymbol === undefined) {
+      return null;
+    }
+
+    if (grammar.isNonTerminalSymbol(currentSententialFormSymbol)) {
+      return {
+        nextSententialForm: nextSententialForm,
+        nextInputIndex: nextInputIndex,
+      };
+    }
+
+    if (currentSententialFormSymbol !== currentInputSymbol) {
+      return null;
+    }
+
+    if (currentSententialFormSymbol === currentInputSymbol) {
+      nextSententialForm = nextSententialForm.slice(1);
+      nextInputIndex = nextInputIndex + 1;
+      continue;
+    }
+  }
 }
 
 function getProductionSequenceFromStackItem<

@@ -6,10 +6,10 @@
  * ========================================================================================
  */
 
-import { printParseTree } from "../helpers/print-parse-tree";
 import { constructParseTreeFromLeftMostProductionSequence } from "../helpers/production-sequence-to-parse-tree";
 import type { ProductionSequence } from "../types";
 import { Grammar } from "../grammar/grammar";
+
 export function naiveTopDownDepthFirstSearchParse<
   NT extends string,
   T extends string
