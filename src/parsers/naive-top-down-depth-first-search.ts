@@ -25,23 +25,30 @@ type Parents<NT extends string, T extends string> = Partial<
 export function naiveTopDownDepthFirstSearchParse<
   NT extends string,
   T extends string
->(grammar: Grammar<NT, T>, input: string) {
-  const productionSequence = dfsFindDerivationSequenceForInput(grammar, input);
+>(args: { grammar: Grammar<NT, T>; input: string }) {
+  const { grammar, input } = args;
+  const productionSequence = dfsFindDerivationSequenceForInput({
+    grammar,
+    input,
+  });
 
   if (!productionSequence) {
     return null;
   }
 
-  return constructParseTreeFromLeftMostProductionSequence(
+  return constructParseTreeFromLeftMostProductionSequence({
     grammar,
-    productionSequence
-  );
+    productionSequence,
+    debug: false,
+  });
 }
 
-function dfsFindDerivationSequenceForInput<NT extends string, T extends string>(
-  grammar: Grammar<NT, T>,
-  input: string
-) {
+function dfsFindDerivationSequenceForInput<
+  NT extends string,
+  T extends string
+>(args: { grammar: Grammar<NT, T>; input: string }) {
+  const { grammar, input } = args;
+
   /**
    * Step 1:
    * Setup the data structures we need to use to traverse all possible parses.
@@ -107,7 +114,7 @@ function dfsFindDerivationSequenceForInput<NT extends string, T extends string>(
     // After matching leading terminal symbols, if the sentential form is empty
     // and we have reached the end of the input, then we have found a valid path.
     if (sententialForm.length === 0 && currentInputIndex > input.length - 1) {
-      return getProductionSequenceFromStackItem(stackItem, parents);
+      return getProductionSequenceFromStackItem({ stackItem, parents });
     }
 
     /**
@@ -214,7 +221,8 @@ function matchStartingTerminalsToInput<
 function getProductionSequenceFromStackItem<
   NT extends string,
   T extends string
->(stackItem: StackItem<NT, T>, parents: Parents<NT, T>) {
+>(args: { stackItem: StackItem<NT, T>; parents: Parents<NT, T> }) {
+  const { stackItem, parents } = args;
   const productionSequence: ProductionSequence<NT, T> = [];
 
   let currentNodeId = stackItem.id;

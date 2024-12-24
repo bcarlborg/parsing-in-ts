@@ -24,9 +24,10 @@ import { ParseNode } from "../types";
  *       <symbol: 1>
  *         <terminal: 1>
  */
-export function printParseTree<NT extends string, T extends string>(
-  parseTree: ParseNode<NT, T>
-) {
+export function printParseTree<NT extends string, T extends string>(args: {
+  parseTree: ParseNode<NT, T>;
+}) {
+  const { parseTree } = args;
   const printParseTreeHelper = (node: ParseNode<NT, T>, depth: number) => {
     const indent = " ".repeat(depth * 2);
 

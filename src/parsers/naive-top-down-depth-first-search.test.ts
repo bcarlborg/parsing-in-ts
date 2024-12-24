@@ -11,7 +11,7 @@ describe("naiveTopDownDepthFirstSearch", () => {
     { input: "1+", expected: null },
   ])("parse invalid input: $input", ({ input, expected }) => {
     const grammar = new Grammar(rightRecursiveBinaryAdditionExpressionsGrammar);
-    const parseTree = naiveTopDownDepthFirstSearchParse(grammar, input);
+    const parseTree = naiveTopDownDepthFirstSearchParse({ grammar, input });
     expect(parseTree).toEqual(expected);
   });
 
@@ -41,7 +41,7 @@ describe("naiveTopDownDepthFirstSearch", () => {
     },
   ])("parse validinput: $input", ({ input, expected }) => {
     const grammar = new Grammar(rightRecursiveBinaryAdditionExpressionsGrammar);
-    const parseTree = naiveTopDownDepthFirstSearchParse(grammar, input);
+    const parseTree = naiveTopDownDepthFirstSearchParse({ grammar, input });
     expect(parseTree).toEqual(expected);
   });
 });

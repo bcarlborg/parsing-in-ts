@@ -20,10 +20,13 @@ for (const inputExpression of inputExpressions) {
 
   console.log(`========== PARSING: "${inputExpression}" ==========`);
 
-  const result = naiveTopDownDepthFirstSearchParse(grammar, inputExpression);
+  const result = naiveTopDownDepthFirstSearchParse({
+    grammar,
+    input: inputExpression,
+  });
 
   if (result) {
-    printParseTree(result);
+    printParseTree({ parseTree: result });
   } else {
     console.log("no parse found");
   }

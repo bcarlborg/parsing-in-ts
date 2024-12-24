@@ -35,11 +35,12 @@ import { Grammar } from "../grammar/grammar";
 export function constructParseTreeFromLeftMostProductionSequence<
   NT extends string,
   T extends string
->(
-  grammar: Grammar<NT, T>,
-  productionSequence: ProductionSequence<NT, T>,
-  debug: boolean = false
-): ParseNode<NT, T> {
+>(args: {
+  grammar: Grammar<NT, T>;
+  productionSequence: ProductionSequence<NT, T>;
+  debug: boolean;
+}): ParseNode<NT, T> {
+  const { grammar, productionSequence, debug } = args;
   const parseTree: ParseNode<NT, T> = {
     symbol: grammar.startSymbol,
     children: [],
