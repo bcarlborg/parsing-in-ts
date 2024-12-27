@@ -134,7 +134,9 @@ function dfsFindDerivationSequenceForInput<
       );
     }
 
-    for (const production of grammar.productions[firstNonTerminalSymbol]) {
+    const productions = grammar.getProductionsBySymbol(firstNonTerminalSymbol);
+
+    for (const production of productions) {
       const newSententialForm = [...production, ...sententialForm.slice(1)];
 
       stack.push({

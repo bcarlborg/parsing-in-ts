@@ -9,6 +9,7 @@ _A simple list of todos that I use to remember where I left off. Buyer be warned
 - [ ] In general, I am starting to like the approach for the DFS more and more, it feels a bit
       more clear, but I think it still is more complicated than it needs to be. I feel like
       there are interfaces that I can simplify.
+  - said another way, I think the macro structure is better, but the line by line implemenation could be better
 
 **functionality**
 
