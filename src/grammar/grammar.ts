@@ -56,7 +56,7 @@ export class Grammar<NT extends string, T extends string> {
     return this.grammarData.terminals.has(symbol as T);
   }
 
-  getProductionsByRightHandSide(rightHandSide: string): NT[] {
+  getProductionSymbolsByRightHandSide(rightHandSide: string): NT[] {
     return this.productionsByRightHandSide[rightHandSide] ?? [];
   }
 
