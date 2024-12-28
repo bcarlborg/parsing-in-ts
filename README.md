@@ -1,1 +1,3 @@
 # Parsing in Typescript
+
+This project implements basic top-down and bottom-up parsing algorithms in TypeScript to help understand the fundamental concepts of parsing. It includes naive implementations of depth-first top-down parsing and breadth-first bottom-up parsing to parse simple context-free grammars. By stripping away optimizations and focusing on the core algorithms, this project aims to clearly demonstrate how parsers traverse and build parse trees - whether starting from the root node and expanding downward (top-down) or starting with the input tokens and reducing upward (bottom-up). Understanding these basic approaches provides essential context for learning more sophisticated parsing techniques like LL, LR, and Earley parsing.
