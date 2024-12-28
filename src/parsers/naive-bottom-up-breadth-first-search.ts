@@ -8,10 +8,30 @@ type Node<NT extends string, T extends string> = {
   prev: Node<NT, T> | null;
 };
 
+function getStringSequentialForm<NT extends string, T extends string>(
+  node: Node<NT, T> | undefined
+): string {
+  if (!node) {
+    return "undefined form";
+  }
+  const debugArray = [];
+  let prev: Node<NT, T> | null | undefined = node;
+  while (prev) {
+    debugArray.unshift(prev.symbol);
+    prev = prev.prev;
+  }
+
+  return debugArray.join("");
+}
+
 export function naiveBottomUpBreadthFirstSearchParse<
   NT extends string,
   T extends string
->(args: { grammar: Grammar<NT, T>; input: string }): ParseNode<NT, T> | null {
+>(args: {
+  grammar: Grammar<NT, T>;
+  input: string;
+  debug?: boolean;
+}): ParseNode<NT, T> | null {
   const { grammar, input } = args;
 
   let primaryQueue: Node<NT, T>[] = [];
@@ -22,9 +42,11 @@ export function naiveBottomUpBreadthFirstSearchParse<
   while (currentCharIndex < input.length) {
     const currentChar = input[currentCharIndex];
 
-    console.log(
-      `Loop Iteration: currentChar=${currentChar} currentCharIndex=${currentCharIndex} ===============================`
-    );
+    if (args.debug) {
+      console.log(
+        `SHIFT REDUCE LOOP: currentChar=${currentChar} currentCharIndex=${currentCharIndex}`
+      );
+    }
 
     // On the first loop iteration, we need to initialize the primary queue
     if (currentCharIndex === 0) {
@@ -46,11 +68,17 @@ export function naiveBottomUpBreadthFirstSearchParse<
     while (primaryQueue.length > 0 && currentCharIndex > 0) {
       const currentNode = primaryQueue.shift();
 
-      console.log(
-        `shift loop start, primaryQueueLength=${
-          primaryQueue.length + 1
-        } currentNode=${currentNode?.symbol}`
-      );
+      if (args.debug) {
+        console.log(
+          `shift loop start ===========================================`
+        );
+
+        console.log(
+          `[shiftloop] currentsequentialform=${getStringSequentialForm(
+            currentNode
+          )}`
+        );
+      }
 
       if (!currentNode) {
         throw new Error("Current node is undefined");
@@ -79,18 +107,17 @@ export function naiveBottomUpBreadthFirstSearchParse<
     while (secondaryQueue.length > 0) {
       const currentNode = secondaryQueue.shift();
 
-      const debugArray = [];
-      let prev: Node<NT, T> | null | undefined = currentNode;
-      while (prev) {
-        debugArray.unshift(prev.symbol);
-        prev = prev.prev;
-      }
+      if (args.debug) {
+        console.log(
+          `reduce loop start ===========================================`
+        );
 
-      console.log(
-        `reduce loop start, secondaryQueueLength=${
-          secondaryQueue.length + 1
-        } currentSequentialForm=${debugArray.join("")}`
-      );
+        console.log(
+          `[reduceloop] currentsequentialform=${getStringSequentialForm(
+            currentNode
+          )}`
+        );
+      }
 
       if (!currentNode) {
         // this should never happen, but we need to handle it
@@ -120,13 +147,17 @@ export function naiveBottomUpBreadthFirstSearchParse<
         );
 
         for (const symbol of productions) {
-          console.log(
-            `reduction to ${symbol} from ${reductionNodeValues.join("")}`
-          );
+          if (args.debug) {
+            console.log(
+              `[reduceloop] reduction in sequential form ${getStringSequentialForm(
+                currentNode
+              )} of substring ${reductionNodeValues.join("")} to ${symbol}`
+            );
+          }
           const newNode: Node<NT, T> = {
             symbol,
             prev: nextReductionNode.prev,
-            children: reductionNodes,
+            children: [...reductionNodes],
           };
           secondaryQueue.push(newNode);
         }
@@ -138,24 +169,28 @@ export function naiveBottomUpBreadthFirstSearchParse<
     currentCharIndex++;
   }
 
-  console.log(
-    `Shift/Reduceloop finished, primaryQueue.length=${primaryQueue.length} secondaryQueue.length=${secondaryQueue.length}`
-  );
+  if (args.debug) {
+    console.log(
+      `Shift/Reduceloop finished, primaryQueue.length=${primaryQueue.length} secondaryQueue.length=${secondaryQueue.length}`
+    );
 
-  console.log(
-    "primaryQueue",
-    primaryQueue.map((node) => node.symbol)
-  );
-  console.log(
-    "secondaryQueue",
-    secondaryQueue.map((node) => node.symbol)
-  );
+    console.log(
+      "primaryQueue",
+      primaryQueue.map((node) => getStringSequentialForm(node))
+    );
+    console.log(
+      "secondaryQueue",
+      secondaryQueue.map((node) => getStringSequentialForm(node))
+    );
+  }
 
   let acceptNode: Node<NT, T> | null = null;
   // primary queue holds all of the final sentential forms, we need to check all
   // of them to see if they are a valid parse
   for (const node of primaryQueue) {
-    console.log(`checking node: ${node.symbol}`);
+    if (args.debug) {
+      console.log(`checking node: ${node.symbol}`);
+    }
     if (node.symbol !== grammar.startSymbol) {
       continue;
     }
@@ -178,6 +213,10 @@ export function naiveBottomUpBreadthFirstSearchParse<
 
   if (!acceptNode) {
     return null;
+  }
+
+  if (args.debug) {
+    printParseTree({ parseTree: acceptNode });
   }
 
   return removeRedundantKeysFromParseTree(acceptNode);
